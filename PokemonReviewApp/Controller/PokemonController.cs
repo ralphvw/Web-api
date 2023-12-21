@@ -26,4 +26,16 @@ public class PokemonController : Controller
         return Ok(Pokemons);
 
     }
+
+    [HttpGet("{pokeId}")]
+    [ProducesResponseType(200, Type = typeof(Pokemon))]
+    [ProducesResponseType(400)]
+    public IActionResult GetPokemon(int pokeId)
+    {
+        if (!_pokemonRepository.PokemonExists(pokeId)) return NotFound();
+        var pokemon = _pokemonRepository.GetPokemon(pokeId);
+
+        return Ok(pokemon);
+    }
+
 }

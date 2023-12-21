@@ -12,8 +12,32 @@ public class PokemonRepository : IPokemonRepository
         _context = context;
     }
 
+    public Pokemon GetPokemon(int id)
+    {
+        return _context.Pokemons.Where(p => p.Id == id).FirstOrDefault();
+    }
+
+    public Pokemon GetPokemon(string name)
+    {
+        return _context.Pokemons.Where(p => p.Name == name).FirstOrDefault();
+    }
+
+    public decimal GetPokemonRating(int pokeId)
+    {
+        var reviews = _context.Reviews.Where(p => p.Pokemon.Id == pokeId);
+
+        if (reviews.Count() == 0) return 0;
+
+        return (decimal)reviews.Sum(r => r.Rating) / reviews.Count();
+    }
+
     public ICollection<Pokemon> GetPokemons()
     {
         return _context.Pokemons.OrderBy(p => p.Id).ToList();
+    }
+
+    public bool PokemonExists(int pokeId)
+    {
+        return _context.Pokemons.Any(p => p.Id == pokeId);
     }
 }
